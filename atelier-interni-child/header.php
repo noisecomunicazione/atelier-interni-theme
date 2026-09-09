@@ -1,6 +1,6 @@
 <?php
 /**
- * Site header.
+ * Site header with Elementor Pro Theme Builder support.
  *
  * @package AtelierInterni
  */
@@ -13,7 +13,11 @@ if ( ! defined( 'ABSPATH' ) ) { exit; }
 	<?php wp_head(); ?>
 </head>
 <body <?php body_class(); ?>>
-<?php wp_body_open(); ?>
+<?php
+wp_body_open();
+$atelier_elementor_header = function_exists( 'elementor_theme_do_location' ) && elementor_theme_do_location( 'header' );
+if ( ! $atelier_elementor_header ) :
+?>
 <a class="screen-reader-text" href="#content"><?php esc_html_e( 'Vai al contenuto', 'atelier-interni' ); ?></a>
 <header class="atelier-site-header">
 	<div class="atelier-topbar">
@@ -58,4 +62,5 @@ if ( ! defined( 'ABSPATH' ) ) { exit; }
 		</div>
 	</nav>
 </header>
+<?php endif; ?>
 <main id="content" class="site-content">

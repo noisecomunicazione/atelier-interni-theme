@@ -1,10 +1,27 @@
 <?php
 /**
- * Commercial front page.
+ * Front page: Elementor content when available, commercial fallback otherwise.
  *
  * @package AtelierInterni
  */
 get_header();
+
+$atelier_page_id = get_queried_object_id();
+$atelier_built_with_elementor = false;
+
+if ( $atelier_page_id && did_action( 'elementor/loaded' ) && isset( ElementorPlugin::$instance->db ) ) {
+	$atelier_built_with_elementor = ElementorPlugin::$instance->db->is_built_with_elementor( $atelier_page_id );
+}
+
+if ( $atelier_built_with_elementor ) {
+	while ( have_posts() ) {
+		the_post();
+		the_content();
+	}
+	get_footer();
+	return;
+}
+
 $shop_url = class_exists( 'WooCommerce' ) ? wc_get_page_permalink( 'shop' ) : home_url( '/' );
 ?>
 <section class="atelier-hero">
@@ -39,18 +56,14 @@ $shop_url = class_exists( 'WooCommerce' ) ? wc_get_page_permalink( 'shop' ) : ho
 </section>
 <?php endif; ?>
 <section class="atelier-section">
-	<div class="atelier-wrap">
-		<div class="atelier-benefits">
-			<div class="atelier-benefit"><strong><?php esc_html_e( 'Selezione professionale', 'atelier-interni' ); ?></strong><span><?php esc_html_e( 'Prodotti scelti con cura', 'atelier-interni' ); ?></span></div>
-			<div class="atelier-benefit"><strong><?php esc_html_e( 'Consulenza dedicata', 'atelier-interni' ); ?></strong><span><?php esc_html_e( 'Supporto prima e dopo l’acquisto', 'atelier-interni' ); ?></span></div>
-			<div class="atelier-benefit"><strong><?php esc_html_e( 'Pagamenti sicuri', 'atelier-interni' ); ?></strong><span><?php esc_html_e( 'Checkout WooCommerce protetto', 'atelier-interni' ); ?></span></div>
-			<div class="atelier-benefit"><strong><?php esc_html_e( 'Soluzioni su misura', 'atelier-interni' ); ?></strong><span><?php esc_html_e( 'Per privati, aziende ed enti', 'atelier-interni' ); ?></span></div>
-		</div>
-	</div>
+	<div class="atelier-wrap"><div class="atelier-benefits">
+		<div class="atelier-benefit"><strong><?php esc_html_e( 'Selezione professionale', 'atelier-interni' ); ?></strong><span><?php esc_html_e( 'Prodotti scelti con cura', 'atelier-interni' ); ?></span></div>
+		<div class="atelier-benefit"><strong><?php esc_html_e( 'Consulenza dedicata', 'atelier-interni' ); ?></strong><span><?php esc_html_e( 'Supporto prima e dopo l’acquisto', 'atelier-interni' ); ?></span></div>
+		<div class="atelier-benefit"><strong><?php esc_html_e( 'Pagamenti sicuri', 'atelier-interni' ); ?></strong><span><?php esc_html_e( 'Checkout WooCommerce protetto', 'atelier-interni' ); ?></span></div>
+		<div class="atelier-benefit"><strong><?php esc_html_e( 'Soluzioni su misura', 'atelier-interni' ); ?></strong><span><?php esc_html_e( 'Per privati, aziende ed enti', 'atelier-interni' ); ?></span></div>
+	</div></div>
 </section>
 <section class="atelier-section atelier-section-light">
 	<div class="atelier-wrap"><div class="atelier-cta"><div><h2><?php esc_html_e( 'Hai un progetto da realizzare?', 'atelier-interni' ); ?></h2><p><?php esc_html_e( 'Raccontaci le tue esigenze: troveremo insieme la soluzione più adatta.', 'atelier-interni' ); ?></p></div><a class="atelier-btn atelier-btn-light" href="<?php echo esc_url( home_url( '/contatti/' ) ); ?>"><?php esc_html_e( 'Parliamone', 'atelier-interni' ); ?></a></div></div>
 </section>
-<?php
-while ( have_posts() ) { the_post(); if ( trim( get_the_content() ) ) { ?><section class="atelier-content"><div class="atelier-wrap"><?php the_content(); ?></div></section><?php } }
-get_footer();
+<?php get_footer(); ?>

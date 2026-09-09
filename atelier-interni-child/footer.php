@@ -1,12 +1,16 @@
 <?php
 /**
- * Site footer.
+ * Site footer with Elementor Pro Theme Builder support.
  *
  * @package AtelierInterni
  */
 if ( ! defined( 'ABSPATH' ) ) { exit; }
 ?>
 </main>
+<?php
+$atelier_elementor_footer = function_exists( 'elementor_theme_do_location' ) && elementor_theme_do_location( 'footer' );
+if ( ! $atelier_elementor_footer ) :
+?>
 <footer class="atelier-footer">
 	<div class="atelier-wrap">
 		<div class="atelier-footer-grid">
@@ -24,6 +28,6 @@ if ( ! defined( 'ABSPATH' ) ) { exit; }
 		</div>
 	</div>
 </footer>
-<?php wp_footer(); ?>
+<?php endif; wp_footer(); ?>
 </body>
 </html>
