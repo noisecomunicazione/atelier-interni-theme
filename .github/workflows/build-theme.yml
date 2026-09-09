@@ -1,0 +1,75 @@
+name: Build installable theme ZIP
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "atelier-interni-child/**"
+      - ".github/workflows/build-theme.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate-and-package:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.2"
+          coverage: none
+
+      - name: Validate required structure
+        shell: bash
+        run: |
+          set -euo pipefail
+          theme="atelier-interni-child"
+          test -d "$theme"
+          test -f "$theme/style.css"
+          test -f "$theme/functions.php"
+          test -f "$theme/index.php"
+          grep -Eq '^Theme Name:' "$theme/style.css"
+          grep -Eq '^Template:[[:space:]]*hello-elementor' "$theme/style.css"
+          if find "$theme" -type l -print -quit | grep -q .; then
+            echo "Symlinks are not allowed in the package."
+            exit 1
+          fi
+
+      - name: Validate PHP syntax
+        shell: bash
+        run: |
+          set -euo pipefail
+          while IFS= read -r -d '' file; do
+            php -l "$file"
+          done < <(find atelier-interni-child -type f -name '*.php' -print0)
+
+      - name: Build ZIP
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -f atelier-interni-child.zip
+          zip -r atelier-interni-child.zip atelier-interni-child             -x "*.DS_Store" "*/.git/*" "*/node_modules/*"
+
+      - name: Validate ZIP contents
+        shell: bash
+        run: |
+          set -euo pipefail
+          unzip -t atelier-interni-child.zip
+          entries="$(zipinfo -1 atelier-interni-child.zip)"
+          if printf '%s\n' "$entries" | grep -Ev '^atelier-interni-child(/|$)' | grep -q .; then
+            echo "ZIP contains files outside the theme directory."
+            exit 1
+          fi
+
+      - name: Upload installable ZIP
+        uses: actions/upload-artifact@v4
+        with:
+          name: atelier-interni-child
+          path: atelier-interni-child.zip
+          if-no-files-found: error
+          retention-days: 30
