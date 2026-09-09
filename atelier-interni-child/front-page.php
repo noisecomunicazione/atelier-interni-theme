@@ -1,19 +1,12 @@
 <?php
 /**
- * Front page: Elementor content when available, commercial fallback otherwise.
+ * Front page: editable static page content, commercial fallback otherwise.
  *
  * @package AtelierInterni
  */
 get_header();
 
-$atelier_page_id = get_queried_object_id();
-$atelier_built_with_elementor = false;
-
-if ( $atelier_page_id && did_action( 'elementor/loaded' ) && isset( ElementorPlugin::$instance->db ) ) {
-	$atelier_built_with_elementor = ElementorPlugin::$instance->db->is_built_with_elementor( $atelier_page_id );
-}
-
-if ( $atelier_built_with_elementor ) {
+if ( 'page' === get_option( 'show_on_front' ) && get_queried_object_id() ) {
 	while ( have_posts() ) {
 		the_post();
 		the_content();
