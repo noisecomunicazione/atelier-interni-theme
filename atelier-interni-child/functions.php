@@ -7,7 +7,7 @@
 
 if ( ! defined( 'ABSPATH' ) ) { exit; }
 
-define( 'ATELIER_THEME_VERSION', '1.1.0' );
+define( 'ATELIER_THEME_VERSION', '1.2.0' );
 
 function atelier_interni_setup() {
 	load_child_theme_textdomain( 'atelier-interni', get_stylesheet_directory() . '/languages' );
