@@ -22,8 +22,38 @@ if ( ! $atelier_elementor_header ) :
 <header class="atelier-site-header">
 	<div class="atelier-topbar">
 		<div class="atelier-wrap">
-			<span><?php esc_html_e( 'Arredo, forniture e soluzioni per ogni ambiente', 'atelier-interni' ); ?></span>
-			<span class="atelier-topbar-right"><?php esc_html_e( 'Assistenza e consulenza professionale', 'atelier-interni' ); ?></span>
+			<div class="atelier-socials" aria-label="<?php esc_attr_e( 'Social network', 'atelier-interni' ); ?>">
+				<?php
+				$social_labels = array(
+					'facebook'  => 'Facebook',
+					'instagram' => 'Instagram',
+					'youtube'   => 'YouTube',
+					'linkedin'  => 'LinkedIn',
+				);
+				foreach ( $social_labels as $network => $label ) :
+					$url = get_theme_mod( 'atelier_' . $network . '_url', '' );
+					if ( $url ) :
+						?>
+						<a href="<?php echo esc_url( $url ); ?>" target="_blank" rel="noopener noreferrer" aria-label="<?php echo esc_attr( $label ); ?>"><?php echo atelier_interni_social_icon( $network ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></a>
+						<?php
+					endif;
+				endforeach;
+				?>
+			</div>
+			<?php
+			if ( has_nav_menu( 'top_bar' ) ) {
+				wp_nav_menu(
+					array(
+						'theme_location' => 'top_bar',
+						'container'      => 'nav',
+						'container_class'=> 'atelier-top-menu',
+						'menu_class'     => 'atelier-top-menu-list',
+						'depth'          => 1,
+						'fallback_cb'    => false,
+					)
+				);
+			}
+			?>
 		</div>
 	</div>
 	<div class="atelier-header-main">

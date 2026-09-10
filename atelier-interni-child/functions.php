@@ -7,7 +7,7 @@
 
 if ( ! defined( 'ABSPATH' ) ) { exit; }
 
-define( 'ATELIER_THEME_VERSION', '1.3.0' );
+define( 'ATELIER_THEME_VERSION', '1.4.0' );
 
 function atelier_interni_setup() {
 	load_child_theme_textdomain( 'atelier-interni', get_stylesheet_directory() . '/languages' );
@@ -21,6 +21,7 @@ function atelier_interni_setup() {
 	add_theme_support( 'elementor' );
 	register_nav_menus(
 		array(
+			'top_bar' => __( 'Menu barra superiore', 'atelier-interni' ),
 			'institutional' => __( 'Menu istituzionale', 'atelier-interni' ),
 			'product_categories' => __( 'Menu categorie prodotti', 'atelier-interni' ),
 			'footer_company' => __( 'Footer azienda', 'atelier-interni' ),
@@ -80,3 +81,56 @@ function atelier_interni_admin_notice() {
 	<?php
 }
 add_action( 'admin_notices', 'atelier_interni_admin_notice' );
+
+
+/**
+ * Top bar options available in Appearance > Customize.
+ */
+function atelier_interni_customize_register( $wp_customize ) {
+	$wp_customize->add_section(
+		'atelier_social_links',
+		array(
+			'title'       => __( 'Barra superiore e social', 'atelier-interni' ),
+			'description' => __( 'Inserisci gli indirizzi completi dei profili social. Lascia vuoto un campo per nascondere la relativa icona. Il menu a destra si assegna da Aspetto → Menu alla posizione “Menu barra superiore”.', 'atelier-interni' ),
+			'priority'    => 35,
+		)
+	);
+
+	$socials = array(
+		'facebook'  => __( 'URL Facebook', 'atelier-interni' ),
+		'instagram' => __( 'URL Instagram', 'atelier-interni' ),
+		'youtube'   => __( 'URL YouTube', 'atelier-interni' ),
+		'linkedin'  => __( 'URL LinkedIn', 'atelier-interni' ),
+	);
+
+	foreach ( $socials as $network => $label ) {
+		$setting = 'atelier_' . $network . '_url';
+		$wp_customize->add_setting(
+			$setting,
+			array(
+				'default'           => '',
+				'sanitize_callback' => 'esc_url_raw',
+				'transport'         => 'refresh',
+			)
+		);
+		$wp_customize->add_control(
+			$setting,
+			array(
+				'type'    => 'url',
+				'section' => 'atelier_social_links',
+				'label'   => $label,
+			)
+		);
+	}
+}
+add_action( 'customize_register', 'atelier_interni_customize_register' );
+
+function atelier_interni_social_icon( $network ) {
+	$icons = array(
+		'facebook'  => '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 8h3V4h-3c-3 0-5 2-5 5v2H6v4h3v7h4v-7h3l1-4h-4V9c0-.7.3-1 1-1Z"/></svg>',
+		'instagram' => '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1"/></svg>',
+		'youtube'   => '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 8.2a3 3 0 0 0-2.1-2.1C17.1 5.6 12 5.6 12 5.6s-5.1 0-6.9.5A3 3 0 0 0 3 8.2 31 31 0 0 0 2.5 12 31 31 0 0 0 3 15.8a3 3 0 0 0 2.1 2.1c1.8.5 6.9.5 6.9.5s5.1 0 6.9-.5a3 3 0 0 0 2.1-2.1 31 31 0 0 0 .5-3.8 31 31 0 0 0-.5-3.8Z"/><path class="atelier-social-play" d="m10 15 5-3-5-3v6Z"/></svg>',
+		'linkedin'  => '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 8.5h4V21H5V8.5ZM7 3a2.3 2.3 0 1 1 0 4.6A2.3 2.3 0 0 1 7 3Zm4 5.5h3.8v1.7h.1c.5-1 1.8-2.1 3.8-2.1 4 0 4.8 2.7 4.8 6.1V21h-4v-6c0-1.4 0-3.3-2-3.3s-2.4 1.6-2.4 3.2V21h-4V8.5Z"/></svg>',
+	);
+	return isset( $icons[ $network ] ) ? $icons[ $network ] : '';
+}
