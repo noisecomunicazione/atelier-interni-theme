@@ -4,7 +4,7 @@ Theme URI: https://atelierdinternishop.com/
 Description: Tema child commerciale per Atelier d'Interni, WooCommerce ed Elementor Pro.
 Author: Noise Comunicazione
 Template: hello-elementor
-Version: 1.2.0
+Version: 1.3.0
 Text Domain: atelier-interni
 Requires at least: 6.4
 Requires PHP: 7.4
@@ -16,3 +16,38 @@ License: GNU General Public License v2 or later
 @media(max-width:1024px){.atelier-header-main .atelier-wrap{grid-template-columns:180px 1fr auto;gap:18px}.atelier-action-label{display:none}.atelier-grid{grid-template-columns:repeat(2,1fr)}.atelier-benefits{grid-template-columns:repeat(2,1fr)}.woocommerce ul.products{grid-template-columns:repeat(3,1fr)}.atelier-footer-grid{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:767px){.atelier-wrap{width:min(100% - 28px,1240px)}.atelier-topbar .atelier-wrap{justify-content:center}.atelier-topbar-right{display:none}.atelier-header-main .atelier-wrap{min-height:76px;grid-template-columns:1fr auto}.atelier-search{grid-column:1/-1;padding-bottom:14px}.atelier-logo img{max-height:50px}.atelier-menu-toggle{display:block}.atelier-nav .atelier-wrap{padding:12px 0;display:block}.atelier-nav ul{display:none;flex-direction:column;align-items:flex-start;gap:0;padding-top:10px}.atelier-nav.is-open ul{display:flex}.atelier-nav a{padding:10px 0}.atelier-categories{display:none}.atelier-hero{min-height:460px}.atelier-hero-inner{padding:70px 0}.atelier-hero p{font-size:17px}.atelier-section{padding:54px 0}.atelier-grid,.atelier-benefits{grid-template-columns:1fr}.atelier-cta{padding:34px 25px;display:block}.atelier-cta .atelier-btn{margin-top:20px}.atelier-footer-grid{grid-template-columns:1fr}.atelier-footer-bottom{display:block}.woocommerce ul.products{grid-template-columns:repeat(2,1fr)}.woocommerce div.product .product_title{font-size:32px}}
 @media(max-width:480px){.atelier-site-name{font-size:19px}.atelier-actions{gap:10px}.atelier-search button{padding:0 14px}.woocommerce ul.products{grid-template-columns:1fr}}
+
+/* Product mega menu */
+.atelier-site-header{position:relative;z-index:100}
+.atelier-nav{position:relative}
+.atelier-nav .atelier-wrap{min-height:56px}
+.atelier-nav .menu{flex:1}
+.atelier-products{margin-left:auto}
+.atelier-products-toggle{display:flex;align-items:center;gap:9px;border:0;border-radius:3px;background:var(--atelier-blue);color:#fff;padding:11px 19px;font:inherit;font-size:14px;font-weight:700;cursor:pointer}
+.atelier-products-toggle:hover,.atelier-products-toggle[aria-expanded="true"]{background:var(--atelier-dark)}
+.atelier-products-chevron{font-size:18px;line-height:1;transition:transform .2s}
+.atelier-products-toggle[aria-expanded="true"] .atelier-products-chevron{transform:rotate(180deg)}
+.atelier-products-panel{position:absolute;top:100%;left:0;right:0;background:var(--atelier-dark);color:#fff;box-shadow:0 18px 35px rgba(9,38,61,.22);z-index:200}
+.atelier-products-panel[hidden]{display:none}
+.atelier-products-panel .atelier-wrap{display:block;padding:28px 0 32px}
+.atelier-products-heading{display:flex;justify-content:space-between;align-items:center;gap:20px;padding-bottom:18px;margin-bottom:8px;border-bottom:1px solid rgba(255,255,255,.18)}
+.atelier-products-heading strong{font-size:20px}
+.atelier-products-heading a{padding:0;color:#fff;font-size:13px}
+.atelier-products-panel ul{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:4px 28px;margin:0;padding:0;list-style:none}
+.atelier-products-panel li{margin:0}
+.atelier-products-panel a{display:block;padding:12px 14px;color:#fff;border-radius:3px;font-size:14px;font-weight:600}
+.atelier-products-panel li a:hover{background:var(--atelier-blue);color:#fff}
+body.atelier-mega-open:after{content:"";position:fixed;inset:0;background:rgba(9,38,61,.2);z-index:50;pointer-events:none}
+@media(max-width:1024px){.atelier-products-panel ul{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(max-width:767px){
+ .atelier-nav .atelier-wrap{display:grid;grid-template-columns:auto 1fr;align-items:center}
+ .atelier-nav .menu{grid-column:1/-1;width:100%}
+ .atelier-products{margin-left:auto}
+ .atelier-products-toggle{padding:10px 15px}
+ .atelier-products-panel{position:static;box-shadow:none}
+ .atelier-products-panel .atelier-wrap{width:100%;padding:18px 14px 24px}
+ .atelier-products-heading{align-items:flex-start}
+ .atelier-products-panel ul{display:grid!important;grid-template-columns:1fr;gap:2px;padding:0!important}
+ .atelier-products-panel a{padding:11px 10px}
+ .atelier-categories{display:none!important}
+}

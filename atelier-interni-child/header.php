@@ -48,17 +48,27 @@ if ( ! $atelier_elementor_header ) :
 		<div class="atelier-wrap">
 			<button class="atelier-menu-toggle" type="button" aria-expanded="false"><?php esc_html_e( 'Menu', 'atelier-interni' ); ?></button>
 			<?php wp_nav_menu( array( 'theme_location' => 'institutional', 'container' => false, 'fallback_cb' => 'atelier_interni_menu_fallback' ) ); ?>
+			<div class="atelier-products">
+				<button class="atelier-products-toggle" type="button" aria-expanded="false" aria-controls="atelier-products-panel">
+					<span><?php esc_html_e( 'Prodotti', 'atelier-interni' ); ?></span>
+					<span class="atelier-products-chevron" aria-hidden="true">⌄</span>
+				</button>
+			</div>
 		</div>
-	</nav>
-	<nav class="atelier-categories" aria-label="<?php esc_attr_e( 'Categorie prodotti', 'atelier-interni' ); ?>">
-		<div class="atelier-wrap">
-			<ul><?php
-			if ( has_nav_menu( 'product_categories' ) ) {
-				wp_nav_menu( array( 'theme_location' => 'product_categories', 'container' => false, 'items_wrap' => '%3$s', 'fallback_cb' => false ) );
-			} else {
-				atelier_interni_category_fallback();
-			}
-			?></ul>
+		<div id="atelier-products-panel" class="atelier-products-panel" hidden>
+			<div class="atelier-wrap">
+				<div class="atelier-products-heading">
+					<strong><?php esc_html_e( 'Esplora le categorie', 'atelier-interni' ); ?></strong>
+					<a href="<?php echo esc_url( class_exists( 'WooCommerce' ) ? wc_get_page_permalink( 'shop' ) : home_url( '/' ) ); ?>"><?php esc_html_e( 'Vedi tutto il catalogo', 'atelier-interni' ); ?> →</a>
+				</div>
+				<ul><?php
+				if ( has_nav_menu( 'product_categories' ) ) {
+					wp_nav_menu( array( 'theme_location' => 'product_categories', 'container' => false, 'items_wrap' => '%3$s', 'fallback_cb' => false ) );
+				} else {
+					atelier_interni_category_fallback();
+				}
+				?></ul>
+			</div>
 		</div>
 	</nav>
 </header>
