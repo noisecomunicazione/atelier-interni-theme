@@ -76,10 +76,11 @@ if ( ! $atelier_elementor_header ) :
 	</div>
 	<nav class="atelier-nav" aria-label="<?php esc_attr_e( 'Navigazione principale', 'atelier-interni' ); ?>">
 		<div class="atelier-wrap">
-			<button class="atelier-menu-toggle" type="button" aria-expanded="false"><?php esc_html_e( 'Menu', 'atelier-interni' ); ?></button>
-			<?php wp_nav_menu( array( 'theme_location' => 'institutional', 'container' => false, 'fallback_cb' => 'atelier_interni_menu_fallback' ) ); ?>
+			<button class="atelier-menu-toggle" type="button" aria-expanded="false" aria-controls="atelier-main-menu"><span class="atelier-toggle-icon" aria-hidden="true"><i></i><i></i><i></i></span><span><?php esc_html_e( 'Menu', 'atelier-interni' ); ?></span></button>
+			<div id="atelier-main-menu" class="atelier-main-menu"><?php wp_nav_menu( array( 'theme_location' => 'institutional', 'container' => false, 'fallback_cb' => 'atelier_interni_menu_fallback' ) ); ?></div>
 			<div class="atelier-products">
 				<button class="atelier-products-toggle" type="button" aria-expanded="false" aria-controls="atelier-products-panel">
+					<span class="atelier-products-grid-icon" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
 					<span><?php esc_html_e( 'Prodotti', 'atelier-interni' ); ?></span>
 					<span class="atelier-products-chevron" aria-hidden="true">⌄</span>
 				</button>

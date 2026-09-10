@@ -4,7 +4,7 @@ Theme URI: https://atelierdinternishop.com/
 Description: Tema child commerciale per Atelier d'Interni, WooCommerce ed Elementor Pro.
 Author: Noise Comunicazione
 Template: hello-elementor
-Version: 1.4.0
+Version: 1.5.0
 Text Domain: atelier-interni
 Requires at least: 6.4
 Requires PHP: 7.4
@@ -50,4 +50,74 @@ body.atelier-mega-open:after{content:"";position:fixed;inset:0;background:rgba(9
  .atelier-products-panel ul{display:grid!important;grid-template-columns:1fr;gap:2px;padding:0!important}
  .atelier-products-panel a{padding:11px 10px}
  .atelier-categories{display:none!important}
+}
+
+
+/* Homepage slider */
+.atelier-slider{position:relative;min-height:520px;overflow:hidden;background:var(--atelier-dark);color:#fff}
+.atelier-slides,.atelier-slide{position:absolute;inset:0}
+.atelier-slide{display:flex;align-items:center;opacity:0;visibility:hidden;transition:opacity .65s ease,visibility .65s ease}
+.atelier-slide.is-active{opacity:1;visibility:visible;z-index:1}
+.atelier-slide-image{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.atelier-slide-overlay{position:absolute;inset:0;background:linear-gradient(90deg,rgba(9,38,61,.94) 0%,rgba(9,38,61,.70) 48%,rgba(18,58,90,.25) 100%)}
+.atelier-slide-content{position:relative;z-index:2;padding-top:80px;padding-bottom:100px}
+.atelier-slide-content h2{max-width:760px;margin:14px 0 20px;color:#fff;font-size:clamp(40px,5.5vw,70px);line-height:1.04}
+.atelier-slide-content p{max-width:720px;margin:0 0 28px;font-size:20px;line-height:1.55}
+.atelier-slider-arrow{position:absolute;top:50%;z-index:4;display:grid;place-items:center;width:46px;height:46px;padding:0;transform:translateY(-50%);border:1px solid rgba(255,255,255,.55);border-radius:50%;background:rgba(9,38,61,.42);color:#fff;font-size:34px;line-height:1;cursor:pointer}
+.atelier-slider-arrow:hover{background:#fff;color:var(--atelier-dark)}
+.atelier-slider-prev{left:24px}.atelier-slider-next{right:24px}
+.atelier-slider-dots{position:absolute;left:50%;bottom:25px;z-index:4;display:flex;gap:9px;transform:translateX(-50%)}
+.atelier-slider-dots button{width:10px;height:10px;padding:0;border:1px solid #fff;border-radius:50%;background:transparent;cursor:pointer}
+.atelier-slider-dots button.is-active{background:#fff}
+.atelier-slider-pause{position:absolute;right:24px;bottom:18px;z-index:4;border:0;background:transparent;color:#fff;font-size:12px;font-weight:700;cursor:pointer}
+.atelier-slider-pause:before{content:"Ⅱ";display:inline-block;margin-right:6px}
+.atelier-slider-pause[aria-pressed="true"]:before{content:"▶";font-size:10px}
+
+/* Refined mobile navigation */
+@media(max-width:767px){
+ .atelier-topbar .atelier-wrap{flex-wrap:wrap;justify-content:center;padding:7px 0}
+ .atelier-socials{justify-content:center}
+ .atelier-top-menu{width:100%;margin:0;border-top:1px solid rgba(255,255,255,.14)}
+ .atelier-top-menu-list{justify-content:flex-start;gap:0;overflow-x:auto;padding-top:5px;scrollbar-width:none}
+ .atelier-top-menu-list::-webkit-scrollbar{display:none}
+ .atelier-top-menu-list li{flex:0 0 auto}
+ .atelier-top-menu-list a{padding:5px 12px;border-right:1px solid rgba(255,255,255,.16);white-space:nowrap}
+ .atelier-nav{background:var(--atelier-dark);border:0}
+ .atelier-nav>.atelier-wrap{width:100%;min-height:58px;padding:8px 14px;grid-template-columns:1fr 1fr;gap:8px}
+ .atelier-menu-toggle,.atelier-products-toggle{width:100%;min-height:42px;display:flex;align-items:center;justify-content:center;gap:10px;padding:9px 14px;border:1px solid rgba(255,255,255,.28);border-radius:3px;background:transparent;color:#fff}
+ .atelier-menu-toggle[aria-expanded="true"],.atelier-products-toggle[aria-expanded="true"]{background:var(--atelier-blue);border-color:var(--atelier-blue)}
+ .atelier-toggle-icon{display:grid;gap:3px;width:17px}
+ .atelier-toggle-icon i{display:block;height:2px;background:currentColor;border-radius:2px}
+ .atelier-products-grid-icon{display:grid;grid-template-columns:repeat(2,5px);gap:3px}
+ .atelier-products-grid-icon i{width:5px;height:5px;background:currentColor;border-radius:1px}
+ .atelier-products-chevron{margin-left:2px}
+ .atelier-main-menu{display:none;grid-column:1/-1;margin:0 -14px -8px;padding:7px 14px 14px;background:var(--atelier-dark);border-top:1px solid rgba(255,255,255,.14)}
+ .atelier-nav.is-open .atelier-main-menu{display:block}
+ .atelier-nav .atelier-main-menu ul{display:flex;padding:0}
+ .atelier-nav .atelier-main-menu li{width:100%;border-bottom:1px solid rgba(255,255,255,.13)}
+ .atelier-nav .atelier-main-menu a{position:relative;padding:14px 38px 14px 12px;color:#fff;font-size:14px}
+ .atelier-nav .atelier-main-menu a:after{content:"›";position:absolute;right:13px;color:var(--atelier-light);font-size:20px;line-height:1}
+ .atelier-products-panel{background:var(--atelier-blue)}
+ .atelier-products-panel .atelier-wrap{padding:20px 14px 24px}
+ .atelier-products-heading{margin-bottom:10px;padding:0 4px 15px}
+ .atelier-products-heading strong{font-size:18px}
+ .atelier-products-heading a{color:#fff}
+ .atelier-products-panel li{border-bottom:1px solid rgba(255,255,255,.15)}
+ .atelier-products-panel a{position:relative;padding:13px 34px 13px 10px;color:#fff}
+ .atelier-products-panel li>a:after{content:"›";position:absolute;right:10px;font-size:20px}
+ .atelier-slider{min-height:480px}
+ .atelier-slide-content{padding:65px 48px 90px 28px}
+ .atelier-slide-content h2{font-size:clamp(34px,11vw,50px)}
+ .atelier-slide-content p{font-size:17px}
+ .atelier-slider-arrow{width:38px;height:38px;font-size:28px}
+ .atelier-slider-prev{left:8px}.atelier-slider-next{right:8px}
+ .atelier-slider-pause{right:14px}
+}
+@media(max-width:480px){
+ .atelier-slider{min-height:450px}
+ .atelier-slide-content{padding-left:24px;padding-right:44px}
+ .atelier-slider-dots{bottom:23px}
+}
+@media(prefers-reduced-motion:reduce){
+ .atelier-slide{transition:none}
 }

@@ -5,6 +5,7 @@
  * @package AtelierInterni
  */
 get_header();
+$atelier_slider_rendered = atelier_interni_render_slider();
 
 if ( 'page' === get_option( 'show_on_front' ) && get_queried_object_id() ) {
 	while ( have_posts() ) {
@@ -17,6 +18,7 @@ if ( 'page' === get_option( 'show_on_front' ) && get_queried_object_id() ) {
 
 $shop_url = class_exists( 'WooCommerce' ) ? wc_get_page_permalink( 'shop' ) : home_url( '/' );
 ?>
+<?php if ( ! $atelier_slider_rendered ) : ?>
 <section class="atelier-hero">
 	<div class="atelier-wrap">
 		<div class="atelier-hero-inner">
@@ -30,6 +32,7 @@ $shop_url = class_exists( 'WooCommerce' ) ? wc_get_page_permalink( 'shop' ) : ho
 		</div>
 	</div>
 </section>
+<?php endif; ?>
 <section class="atelier-section">
 	<div class="atelier-wrap">
 		<header class="atelier-section-head"><span class="atelier-eyebrow"><?php esc_html_e( 'Scegli per ambiente', 'atelier-interni' ); ?></span><h2><?php esc_html_e( 'Tutto ciò che serve, in un unico atelier', 'atelier-interni' ); ?></h2><p><?php esc_html_e( 'Una navigazione commerciale immediata per trovare prodotti e soluzioni in base alle tue esigenze.', 'atelier-interni' ); ?></p></header>

@@ -7,7 +7,7 @@
 
 if ( ! defined( 'ABSPATH' ) ) { exit; }
 
-define( 'ATELIER_THEME_VERSION', '1.4.0' );
+define( 'ATELIER_THEME_VERSION', '1.5.0' );
 
 function atelier_interni_setup() {
 	load_child_theme_textdomain( 'atelier-interni', get_stylesheet_directory() . '/languages' );
@@ -133,4 +133,168 @@ function atelier_interni_social_icon( $network ) {
 		'linkedin'  => '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 8.5h4V21H5V8.5ZM7 3a2.3 2.3 0 1 1 0 4.6A2.3 2.3 0 0 1 7 3Zm4 5.5h3.8v1.7h.1c.5-1 1.8-2.1 3.8-2.1 4 0 4.8 2.7 4.8 6.1V21h-4v-6c0-1.4 0-3.3-2-3.3s-2.4 1.6-2.4 3.2V21h-4V8.5Z"/></svg>',
 	);
 	return isset( $icons[ $network ] ) ? $icons[ $network ] : '';
+}
+
+
+/**
+ * Homepage slider options.
+ */
+function atelier_interni_slider_customize_register( $wp_customize ) {
+	$wp_customize->add_section(
+		'atelier_home_slider',
+		array(
+			'title'       => __( 'Slider homepage', 'atelier-interni' ),
+			'description' => __( 'Attiva lo slider e configura fino a cinque slide. Le slide prive di titolo e immagine vengono ignorate.', 'atelier-interni' ),
+			'priority'    => 36,
+		)
+	);
+
+	$wp_customize->add_setting(
+		'atelier_slider_enabled',
+		array(
+			'default'           => false,
+			'sanitize_callback' => 'atelier_interni_sanitize_checkbox',
+		)
+	);
+	$wp_customize->add_control(
+		'atelier_slider_enabled',
+		array(
+			'type'    => 'checkbox',
+			'section' => 'atelier_home_slider',
+			'label'   => __( 'Attiva lo slider in homepage', 'atelier-interni' ),
+		)
+	);
+
+	$wp_customize->add_setting(
+		'atelier_slider_interval',
+		array(
+			'default'           => 5000,
+			'sanitize_callback' => 'absint',
+		)
+	);
+	$wp_customize->add_control(
+		'atelier_slider_interval',
+		array(
+			'type'    => 'select',
+			'section' => 'atelier_home_slider',
+			'label'   => __( 'Velocità autoplay', 'atelier-interni' ),
+			'choices' => array(
+				4000 => __( '4 secondi', 'atelier-interni' ),
+				5000 => __( '5 secondi', 'atelier-interni' ),
+				6000 => __( '6 secondi', 'atelier-interni' ),
+				8000 => __( '8 secondi', 'atelier-interni' ),
+			),
+		)
+	);
+
+	for ( $i = 1; $i <= 5; $i++ ) {
+		$prefix = 'atelier_slide_' . $i . '_';
+		$defaults = 1 === $i ? array(
+			'title' => __( 'Spazi da vivere, soluzioni da scegliere.', 'atelier-interni' ),
+			'text'  => __( 'Arredo, forniture e prodotti selezionati per la casa, il lavoro e la Pubblica Amministrazione.', 'atelier-interni' ),
+			'label' => __( 'Scopri il catalogo', 'atelier-interni' ),
+		) : array( 'title' => '', 'text' => '', 'label' => '' );
+
+		$wp_customize->add_setting( $prefix . 'image', array( 'default' => '', 'sanitize_callback' => 'esc_url_raw' ) );
+		$wp_customize->add_control(
+			new WP_Customize_Image_Control(
+				$wp_customize,
+				$prefix . 'image',
+				array(
+					'label'       => sprintf( __( 'Slide %d — immagine', 'atelier-interni' ), $i ),
+					'section'     => 'atelier_home_slider',
+					'description' => __( 'Formato consigliato: 1920 × 760 px.', 'atelier-interni' ),
+				)
+			)
+		);
+
+		foreach ( array(
+			'title' => array( sprintf( __( 'Slide %d — titolo', 'atelier-interni' ), $i ), 'text', 'sanitize_text_field' ),
+			'text'  => array( sprintf( __( 'Slide %d — testo', 'atelier-interni' ), $i ), 'textarea', 'sanitize_textarea_field' ),
+			'label' => array( sprintf( __( 'Slide %d — testo pulsante', 'atelier-interni' ), $i ), 'text', 'sanitize_text_field' ),
+			'url'   => array( sprintf( __( 'Slide %d — link pulsante', 'atelier-interni' ), $i ), 'url', 'esc_url_raw' ),
+		) as $field => $args ) {
+			$wp_customize->add_setting(
+				$prefix . $field,
+				array(
+					'default'           => isset( $defaults[ $field ] ) ? $defaults[ $field ] : '',
+					'sanitize_callback' => $args[2],
+				)
+			);
+			$wp_customize->add_control(
+				$prefix . $field,
+				array(
+					'type'    => $args[1],
+					'section' => 'atelier_home_slider',
+					'label'   => $args[0],
+				)
+			);
+		}
+	}
+}
+add_action( 'customize_register', 'atelier_interni_slider_customize_register' );
+
+function atelier_interni_sanitize_checkbox( $checked ) {
+	return (bool) $checked;
+}
+
+/**
+ * Render the optional homepage slider.
+ *
+ * @return bool True when the slider was rendered.
+ */
+function atelier_interni_render_slider() {
+	if ( ! get_theme_mod( 'atelier_slider_enabled', false ) ) {
+		return false;
+	}
+
+	$slides = array();
+	for ( $i = 1; $i <= 5; $i++ ) {
+		$prefix = 'atelier_slide_' . $i . '_';
+		$slide  = array(
+			'image' => get_theme_mod( $prefix . 'image', '' ),
+			'title' => get_theme_mod( $prefix . 'title', 1 === $i ? __( 'Spazi da vivere, soluzioni da scegliere.', 'atelier-interni' ) : '' ),
+			'text'  => get_theme_mod( $prefix . 'text', 1 === $i ? __( 'Arredo, forniture e prodotti selezionati per la casa, il lavoro e la Pubblica Amministrazione.', 'atelier-interni' ) : '' ),
+			'label' => get_theme_mod( $prefix . 'label', 1 === $i ? __( 'Scopri il catalogo', 'atelier-interni' ) : '' ),
+			'url'   => get_theme_mod( $prefix . 'url', '' ),
+		);
+		if ( $slide['image'] || $slide['title'] ) {
+			$slides[] = $slide;
+		}
+	}
+
+	if ( empty( $slides ) ) {
+		return false;
+	}
+
+	$interval = max( 3000, absint( get_theme_mod( 'atelier_slider_interval', 5000 ) ) );
+	?>
+	<section class="atelier-slider" data-atelier-slider data-interval="<?php echo esc_attr( $interval ); ?>" aria-roledescription="<?php esc_attr_e( 'carosello', 'atelier-interni' ); ?>">
+		<div class="atelier-slides">
+			<?php foreach ( $slides as $index => $slide ) : ?>
+				<article class="atelier-slide<?php echo 0 === $index ? ' is-active' : ''; ?>" aria-hidden="<?php echo 0 === $index ? 'false' : 'true'; ?>">
+					<?php if ( $slide['image'] ) : ?><img class="atelier-slide-image" src="<?php echo esc_url( $slide['image'] ); ?>" alt=""><?php endif; ?>
+					<div class="atelier-slide-overlay"></div>
+					<div class="atelier-wrap atelier-slide-content">
+						<span class="atelier-eyebrow"><?php esc_html_e( 'Atelier d’Interni', 'atelier-interni' ); ?></span>
+						<?php if ( $slide['title'] ) : ?><h2><?php echo esc_html( $slide['title'] ); ?></h2><?php endif; ?>
+						<?php if ( $slide['text'] ) : ?><p><?php echo esc_html( $slide['text'] ); ?></p><?php endif; ?>
+						<?php if ( $slide['label'] && $slide['url'] ) : ?><a class="atelier-btn atelier-btn-light" href="<?php echo esc_url( $slide['url'] ); ?>"><?php echo esc_html( $slide['label'] ); ?></a><?php endif; ?>
+					</div>
+				</article>
+			<?php endforeach; ?>
+		</div>
+		<?php if ( count( $slides ) > 1 ) : ?>
+			<button class="atelier-slider-arrow atelier-slider-prev" type="button" aria-label="<?php esc_attr_e( 'Slide precedente', 'atelier-interni' ); ?>">‹</button>
+			<button class="atelier-slider-arrow atelier-slider-next" type="button" aria-label="<?php esc_attr_e( 'Slide successiva', 'atelier-interni' ); ?>">›</button>
+			<div class="atelier-slider-dots" role="tablist" aria-label="<?php esc_attr_e( 'Seleziona slide', 'atelier-interni' ); ?>">
+				<?php foreach ( $slides as $index => $slide ) : ?>
+					<button type="button" class="<?php echo 0 === $index ? 'is-active' : ''; ?>" aria-label="<?php echo esc_attr( sprintf( __( 'Vai alla slide %d', 'atelier-interni' ), $index + 1 ) ); ?>" aria-selected="<?php echo 0 === $index ? 'true' : 'false'; ?>"></button>
+				<?php endforeach; ?>
+			</div>
+			<button class="atelier-slider-pause" type="button" aria-pressed="false"><span class="atelier-pause-label"><?php esc_html_e( 'Pausa', 'atelier-interni' ); ?></span></button>
+		<?php endif; ?>
+	</section>
+	<?php
+	return true;
 }
